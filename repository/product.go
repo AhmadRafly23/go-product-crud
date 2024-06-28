@@ -2,7 +2,7 @@ package repository
 
 import (
 	"github.com/AhmadRafly23/go-product-crud/model"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type ProductPgRepo struct {
