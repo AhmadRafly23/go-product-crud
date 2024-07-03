@@ -44,6 +44,8 @@ func main() {
 	productGroup := apiV1.Group("/products")
 	productGroup.GET("", productHandler.Get)
 	productGroup.POST("", productHandler.Create)
+	productGroup.PUT("/:id", productHandler.Update)
+	productGroup.DELETE("/:id", productHandler.Delete)
 
 	if err := ge.Run(":8080"); err != nil {
 		panic(err)

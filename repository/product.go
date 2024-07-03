@@ -20,3 +20,19 @@ func (s *ProductPgRepo) Create(product *model.Product) error {
 	return err
 }
 
+func (s *ProductPgRepo) Update(id uint64, productUpdate *model.ProductUpdate) error {
+	err := s.DB.Debug().
+		Where("id = ?", id).
+		Updates(&model.Product{
+			Name:   productUpdate.Name,
+			Price:    productUpdate.Price,
+		}).Error
+	return err
+}
+
+func (s *ProductPgRepo) Delete(id uint64) error {
+	err := s.DB.Debug().
+		Where("id = ?", id).
+		Delete(&model.Product{}).Error
+	return err
+}

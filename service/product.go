@@ -16,3 +16,11 @@ func (u *ProductService) Get() ([]*model.Product, error) {
 func (u *ProductService) Create(product *model.Product) error {
 	return u.ProductPgRepo.Create(product)
 }
+
+func (u *ProductService) Update(id uint64, product *model.ProductUpdate) error {
+	return u.ProductPgRepo.Update(id, product)
+}
+
+func (u *ProductService) Delete(id uint64) error {
+	return u.ProductPgRepo.Delete(id)
+}
