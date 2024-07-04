@@ -9,7 +9,7 @@ type (
 		ID        uint64     `json:"id" gorm:"column:id;autoIncrement"`
 		Password  string     `json:"-" gorm:"column:password"`
 		Name      string     `json:"name" gorm:"column:name"`
-		Email     string     `json:"email" gorm:"column:email"`
+		Email     string     `json:"email" gorm:"column:email;unique"`
 		Gender    GenderType `json:"gender" gorm:"column:gender"`
 		DeletedAt *time.Time `json:"-" gorm:"-"`
 	}

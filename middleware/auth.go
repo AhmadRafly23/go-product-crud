@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -10,7 +9,6 @@ import (
 )
 
 func BearerAuthorization() gin.HandlerFunc {
-	fmt.Println("Hallo")
 	return func(ctx *gin.Context) {
 		headerAuth := ctx.GetHeader("Authorization")
 		// {Authorization: Bearer jwt_token}
@@ -31,13 +29,16 @@ func BearerAuthorization() gin.HandlerFunc {
 			return
 		}
 		// validate jwt
-		valid := helper.ValidateUserJWT(splitToken[1])
+		valid, email, _ := helper.ValidateUserJWT(splitToken[1])
 		if !valid {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, map[string]any{
 				"message": "malformed token",
 			})
 			return
 		}
+
+		ctx.Set("user", email)
+
 		ctx.Next()
 	}
 }

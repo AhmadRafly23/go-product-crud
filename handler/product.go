@@ -22,6 +22,7 @@ func (u *ProductHandler) Get(ctx *gin.Context) {
 		})
 		return
 	}
+
 	ctx.JSON(http.StatusOK, model.Response{
 		Message: "products fetched",
 		Success: true,
@@ -38,6 +39,7 @@ func (u *ProductHandler) Create(ctx *gin.Context) {
 			Success: false,
 		})
 	}
+
 	// call service
 	err := u.ProductService.Create(&model.Product{
 		Name:  productCreate.Name,

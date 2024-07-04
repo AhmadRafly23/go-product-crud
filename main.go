@@ -60,8 +60,6 @@ func main() {
 	productGroup.PUT("/:id", productHandler.Update)
 	productGroup.DELETE("/:id", productHandler.Delete)
 
-	if err := ge.Run(":8080"); err != nil {
-		panic(err)
-	}
+	ge.Run(":8080")
 
 }

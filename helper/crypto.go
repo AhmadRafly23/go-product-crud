@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -35,12 +36,39 @@ func GenerateUserJWT(name, email string, exp time.Duration) (string, error) {
 	return tokenString, nil
 }
 
-func ValidateUserJWT(token string) bool {
-	jwttoken, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
-		return SECRET_KEY, nil
-	})
-	if err != nil {
-		return false
-	}
-	return jwttoken.Valid
+// func ValidateUserJWT(token string) bool {
+// 	jwttoken, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
+// 		return SECRET_KEY, nil
+// 	})
+// 	if err != nil {
+// 		return false
+// 	}
+
+// 	return jwttoken.Valid
+// }
+
+func ValidateUserJWT(tokenString string) (bool, string, error) {
+    // Mendefinisikan klaim yang diharapkan
+    claims := jwt.MapClaims{}
+
+    // Mendekode dan memverifikasi token
+    token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+        return SECRET_KEY, nil
+    })
+
+    if err != nil {
+        return false, "", err
+    }
+
+    if !token.Valid {
+        return false, "", fmt.Errorf("invalid token")
+    }
+
+    // Mengambil nilai email dari klaim
+    email, ok := claims["email"].(string)
+    if !ok {
+        return false, "", fmt.Errorf("email not found in token")
+    }
+
+    return true, email, nil
 }

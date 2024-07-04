@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/AhmadRafly23/go-product-crud/helper"
@@ -41,6 +42,8 @@ func (u *UserHandler) Create(ctx *gin.Context) {
 		})
 		return
 	}
+	
+	// Hash password
 	hashedPassword, err := helper.HashPassword(studentCreate.Password)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, model.Response{
@@ -49,6 +52,7 @@ func (u *UserHandler) Create(ctx *gin.Context) {
 		})
 		return
 	}
+	
 	// call service
 	err = u.UserService.Create(&model.User{
 		Email:    studentCreate.Email,
@@ -57,16 +61,23 @@ func (u *UserHandler) Create(ctx *gin.Context) {
 		Gender:   studentCreate.Gender,
 	})
 	if err != nil {
+		if strings.Contains(err.Error(), "duplicate key value violates unique constraint") {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, model.Response{
+				Message: "email already exists",
+				Success: false,
+			})
+			return
+		}
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, model.Response{
 			Message: "something went wrong",
 			Success: false,
 		})
 		return
 	}
-	// response
 
+	// response
 	ctx.JSON(http.StatusCreated, model.Response{
-		Message: "users created",
+		Message: "user created",
 		Success: true,
 	})
 }
